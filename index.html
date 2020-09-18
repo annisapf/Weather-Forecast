@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Weather Forecast" />
+    <meta name="keywords" content="Weather Forecast">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+
+    <link href="styles.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    ​
+    ​
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+</head>
+
+<body>
+
+    <header>
+
+        <!-- Full Page Intro -->
+        <div class="col-md-12 text-white text-center ">
+            <div class="jumbotron bg-info">
+                <h3 class="display-3 font-weight-bold text-white"><i class="fas fa-sun"></i>
+
+                    Weather Dashboard
+                </h3>
+            </div>
+            <!-- Grid Column-->
+            ​
+        </div>
+        <!-- Full Page Intro -->
+
+    </header>
+
+    <main>
+
+
+
+        <div class="container">
+
+            <!-- This form will be used to input data about the movies -->
+
+            <div class="row align-items-center">
+
+
+                <div class="col-sm col-md">
+                    <label for="weather-input">Search for a City:</label><br>
+
+                    <input type="text" id="city-input">
+
+                    <!-- Button to trigger AJAX call -->
+                    <button id="find-city"><i class="fas fa-search"></i></button>
+
+                </div>
+
+
+
+                <div class="col-md-6" id="weather-result">
+
+                </div>
+
+
+
+
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+                <script src="script.js"></script>
+
+            </div>
+
+            <div class="row row-content align-items-center">
+
+                <div id="buttons-view"></div>
+
+            </div>
+
+
+
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
