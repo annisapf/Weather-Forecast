@@ -1,5 +1,5 @@
-//initial array of cities
-var cityArr = [];
+
+var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
 
 //Function .on("click") to trigger AJAX call
 $('#find-city').on("click", function (event) {
@@ -9,39 +9,20 @@ $('#find-city').on("click", function (event) {
     //clear for new search result
     $("#weather-result").html("");
 
-    var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
-
     var cityInput = $("#city-input").val();
 
     //cityArr.push(cityInput);
 
     // Query the database
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
-    //var queryURLUV = "https://openweathermap.org/data/2.5/onecall?lat=-33.87&lon=151.21&units=metric&appid=439d4b804bc8187953eb36d2a8c26a02"
 
+    var cityLat;
+    var cityLon;
 
     $.ajax({
         url: queryURL,
         method: "GET"
     })
-
-        //$.ajax({
-        //url: queryURLUV,
-        //method: "GET"
-        //})
-
-        //.then(function (response) {
-
-        //var weatherDiv = $("<div class='weatherdiv'>");
-
-        //var uvInd = $("<p>").html(response.current.uvi);
-
-        //weatherDiv.append(uvInd);
-
-        //$("#weather-result").prepend(uvInd);
-
-        //})
-
 
 
         .then(function (response) {
@@ -50,6 +31,7 @@ $('#find-city').on("click", function (event) {
 
 
             var currentDate = moment().format('MM/D/YYYY');
+
 
             //Create div for weather
             var weatherDiv = $("<div class='weatherdiv'>");
@@ -75,10 +57,10 @@ $('#find-city').on("click", function (event) {
 
             $("#weather-result").prepend(city, temp, humidity, wind);
 
-            //$("#weather-result").empty();
+            cityLat = response.coord.lat;
+            cityLon = response.coord.lon;
 
-            //$('#weather-result').text(JSON.stringify(response, null, 2));
-
+            getUVInd(APIKey, cityLat, cityLon);
 
 
             for (var i = 0; i < city.length; i++) {
@@ -93,11 +75,33 @@ $('#find-city').on("click", function (event) {
                 $("#buttons-view").append(a);
             }
         })
-
-
-
-
-
-
-
 })
+
+function getUVInd(APIKey, cityLat, cityLon) {
+
+    queryURLUV = "https://api.openweathermap.org/data/2.5/uvi?lat=" + cityLat + "&lon=" + cityLon + "&appid=" + APIKey;
+
+
+    $.ajax({
+        url: queryURLUV,
+        method: "GET"
+    })
+
+        .then(function (response) {
+
+            console.log(response);
+
+            //Create div for weather
+            var weatherDiv = $("<div class='weatherdiv'>");
+
+
+            var uvInd = $("<p>").text("UV Index: " + response.value);
+
+            weatherDiv.append(uvInd);
+
+            $("#weather-result").prepend(uvInd);
+        })
+
+
+
+}
