@@ -1,21 +1,39 @@
 
 var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
 
+var cityArr = [];
+
+
+showSavedData();
+
+function showSavedData() {
+    var storeSaveCity = JSON.parse(localStorage.getItem(cityArr));
+
+
+    if (storeSaveCity !== null) {
+        cityArr = storeSaveCity;
+    }
+
+}
+
 //Function .on("click") to trigger AJAX call
 $('#find-city').on("click", function (event) {
-    getWeatherToday(APIKey);
+    getWeatherToday();
     getWeatherForecast(APIKey);
+    saveCity();
+
+
 });
 
 
-function getWeatherToday(APIKey) {
+function getWeatherToday() {
 
     var cityInput = $("#city-input").val();
 
     //clear for new search result
     $("#weather-result").html("");
 
-    //cityArr.push(cityInput);
+    cityArr.push(cityInput);
 
     // Query the database
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
@@ -30,12 +48,6 @@ function getWeatherToday(APIKey) {
 
 
         .then(function (response) {
-
-            console.log(response);
-
-            //if (response.name != "") {
-            //alert("City not found");
-            //}
 
 
             var currentDate = moment().format('MM/D/YYYY');
@@ -73,11 +85,15 @@ function getWeatherToday(APIKey) {
             getUVInd(APIKey, cityLat, cityLon);
 
 
+
+
             for (var i = 0; i < city.length; i++) {
+
+
 
                 // Then dynamicaly generating buttons for each movie in the array
                 // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-                var a = $("<li>").attr({ "class": "bg-info text-light" });
+                var a = $("<button>").attr({ "class": "list-group-item list-group-item-action" });
 
                 // Providing the initial button text
                 a.text(response.name);
@@ -129,7 +145,8 @@ function getWeatherForecast(APIKey) {
 
     $.ajax({
         url: queryURLFor,
-        method: "GET"
+        method: "GET",
+
     })
 
         .then(function (response) {
@@ -140,6 +157,10 @@ function getWeatherForecast(APIKey) {
 
             //divide by 8 since API updates weather every 3 hours a day
             for (var i = 1; i <= getForInfo.length / 8; i++) {
+
+                var getIcon = getForInfo[i * 7].weather[0].icon;
+                console.log(getIcon);
+
 
                 //get epoch time
                 var getForDate = getForInfo[i * 7].dt * 1000;
@@ -160,15 +181,15 @@ function getWeatherForecast(APIKey) {
                 var cardWeather = $('<div>').attr({ "class": "card bg-info shadow m-4 flex-container" });
 
                 var cardBodyWeather = $('<div>').attr({ "class": "card-body" });
+                var iconURL = $('<img>').attr({ "src": "https://openweathermap.org/img/w/" + getIcon + ".png" });
 
                 var weatherForDate = $('<p>').html(getWeatherMonth + "/" + getWeatherDate + "/" + getWeatherYear);
 
-                var weatherIcon = '<i class="fas fa-sun"></i>';
 
+                var weatherIcon = $("<p>").append(iconURL);
 
                 var weatherForTemp = $('<p>').html("Temperature: " + getForTemp + "&deg" + "F");
                 var weatherForHum = $('<p>').html("Humidity: " + getForHum + "% <br>");
-
 
 
                 //$("#weather-forecast").append(weatherForDate, weatherForTemp, weatherForHum);
@@ -179,12 +200,16 @@ function getWeatherForecast(APIKey) {
                 $("#weather-forecast").append(cardWeather);
 
 
-
             }
 
 
         })
 
+}
+
+
+function saveCity() {
+    localStorage.setItem("citylist", JSON.stringify(cityArr));
 }
 
 
