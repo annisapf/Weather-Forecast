@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Forecast</title>
 
-    <link href="styles.css" rel="stylesheet">
+    <link href="assets/styles.css" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -25,20 +25,16 @@
 
     <header>
 
-        <!-- Full Page Intro -->
         <div class="col-md-12 text-white text-center ">
             <div class="jumbotron bg-info">
                 <h3 class="display-3 font-weight-bold text-white"><i class="fas fa-sun"></i>
-
                     Weather Dashboard
-                </h3>
-            </div>
-            <!-- Grid Column-->
-            ​
+                    <i class="fas fa-sun"></i></h3>
+            </div> ​
         </div>
-        <!-- Full Page Intro -->
 
     </header>
+
 
     <main>
 
@@ -60,30 +56,23 @@
                     <button id="find-city"><i class="fas fa-search"></i></button>
 
 
+                    <div class="mt-3" id="buttons-view"></div>
+
                 </div>
 
 
 
-                <div class="col-md-6" id="weather-result">
+                <div class="col-md-9">
+
+                    <div class="card-body m-2" id="weather-result">
+                    </div>
+
+                    <div class="card-text row text-light" id="weather-forecast">
+                    </div>
 
                 </div>
 
             </div>
-
-            <div class="row row-content align-items-center">
-
-                <div id="buttons-view"></div>
-
-            </div>
-
-
-            <div class="row align-items-center">
-
-                <div class="col-md-6" id="weather-forecast">
-
-                </div>
-            </div>
-
 
         </div>
 
@@ -91,8 +80,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
-    <script src="script.js"></script>
+    <script src="assets/script.js"></script>
 
 
 </body>

@@ -1,9 +1,6 @@
 
 var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
 
-
-
-
 //Function .on("click") to trigger AJAX call
 $('#find-city').on("click", function (event) {
     getWeatherToday(APIKey);
@@ -36,15 +33,20 @@ function getWeatherToday(APIKey) {
 
             console.log(response);
 
+            //if (response.name != "") {
+            //alert("City not found");
+            //}
+
 
             var currentDate = moment().format('MM/D/YYYY');
 
 
             //Create div for weather
-            var weatherDiv = $("<div class='weatherdiv'>");
+            var weatherDiv = $('<div class="weatherdiv">');
 
+            var iconWeather = '<i class="fas fa-sun"></i>';
 
-            var city = $("<p>").html("<h3>" + response.name + " (" + currentDate + ")" + '<i class="fas fa-sun"></i></h3>');
+            var city = $("<p>").html("<h3>" + response.name + " (" + currentDate + ")" + iconWeather);
 
 
             var tempF = (response.main.temp - 273.15) * 1.80 + 32;
@@ -52,11 +54,11 @@ function getWeatherToday(APIKey) {
             $('.temp').html(tempF.toFixed() + "Degree");
 
             //Store the weather data
-            var temp = $("<p>").html("Temperature: " + tempF.toFixed() + "&deg" + "F");
+            var temp = $('<p>').html("Temperature: " + tempF.toFixed() + "&deg" + "F");
 
-            var wind = $("<p>").text("Wind Speed: " + response.wind.speed + " MPH");
+            var wind = $('<p>').text("Wind Speed: " + response.wind.speed + " MPH");
 
-            var humidity = $("<p>").text("Humidity: " + response.main.humidity + "%");
+            var humidity = $('<p>').text("Humidity: " + response.main.humidity + "%");
 
 
             weatherDiv.append(city, temp, wind, humidity);
@@ -75,7 +77,7 @@ function getWeatherToday(APIKey) {
 
                 // Then dynamicaly generating buttons for each movie in the array
                 // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-                var a = $("<li>");
+                var a = $("<li>").attr({ "class": "bg-info text-light" });
 
                 // Providing the initial button text
                 a.text(response.name);
@@ -92,6 +94,7 @@ function getUVInd(APIKey, cityLat, cityLon) {
     var queryURLUV = "https://api.openweathermap.org/data/2.5/uvi?lat=" + cityLat + "&lon=" + cityLon + "&appid=" + APIKey;
 
 
+
     $.ajax({
         url: queryURLUV,
         method: "GET"
@@ -102,10 +105,10 @@ function getUVInd(APIKey, cityLat, cityLon) {
             console.log(response);
 
             //Create div for weather
-            var weatherDiv = $("<div class='weatherdiv'>");
+            var weatherDiv = $('<div class="weatherdiv">');
 
 
-            var uvInd = $("<p>").text("UV Index: " + response.value);
+            var uvInd = $('<p>').html("UV Index: " + "<span class='badge badge-danger p-2'>" + response.value + "</span>");
 
             weatherDiv.append(uvInd);
 
@@ -118,7 +121,7 @@ function getWeatherForecast(APIKey) {
     var cityInput = $("#city-input").val();
 
     //clear for new search result
-    $("#weather-result").html("");
+    $("#weather-forecast").html("");
 
 
     var queryURLFor = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityInput + "&units=imperial&appid=" + APIKey;
@@ -131,34 +134,51 @@ function getWeatherForecast(APIKey) {
 
         .then(function (response) {
 
-            console.log(response);
 
-            //epoch & unix timestamp conversion tools
-            //var getNowTime = new Date();
-            //var epoch = getNowTime.getTime();
+            var getForInfo = response.list;
 
-            //get 5 days forecast
-            //var getFirstDay = epoch + (24 * 60 * 60);
-            //console.log(epoch);
-            //console.log(getFirstDay);
 
-            var getForDate = response.list;
+            //divide by 8 since API updates weather every 3 hours a day
+            for (var i = 1; i <= getForInfo.length / 8; i++) {
 
-            for (var i = 1; i < getForDate.length; i++) {
+                //get epoch time
+                var getForDate = getForInfo[i * 7].dt * 1000;
+                var getWeatherDate = new Date(getForDate).getDate();
+                var getWeatherMonth = new Date(getForDate).getMonth();
+                var getWeatherYear = new Date(getForDate).getFullYear();
 
-                getForDate == getForDate.length[i * 7];
-                var getForTemp = getForDate[i * 7].main.temp;
-                var getForHum = getForDate[i * 7].main.humidity;
+                var getForTemp = getForInfo[i * 7].main.temp;
+                var getForHum = getForInfo[i * 7].main.humidity;
 
+                console.log("epoch: " + getForDate);
+                console.log("Date: " + getWeatherDate);
+                console.log("Humidity: " + getForHum);
                 console.log("Temperature: " + getForTemp);
                 console.log("Humidity: " + getForHum);
 
-                var weatherForTemp = $("<p>").html("Temperature: " + getForTemp + "&deg" + "F");
-                var weatherForHum = $("<p>").html("Humidity: " + getForHum + "%");
+                //create card body
+                var cardWeather = $('<div>').attr({ "class": "card bg-info shadow m-4 flex-container" });
+
+                var cardBodyWeather = $('<div>').attr({ "class": "card-body" });
+
+                var weatherForDate = $('<p>').html(getWeatherMonth + "/" + getWeatherDate + "/" + getWeatherYear);
+
+                var weatherIcon = '<i class="fas fa-sun"></i>';
+
+
+                var weatherForTemp = $('<p>').html("Temperature: " + getForTemp + "&deg" + "F");
+                var weatherForHum = $('<p>').html("Humidity: " + getForHum + "% <br>");
 
 
 
-                $("#weather-forecast").append(weatherForTemp, weatherForHum);
+                //$("#weather-forecast").append(weatherForDate, weatherForTemp, weatherForHum);
+
+                cardBodyWeather.append(weatherForDate, weatherIcon, weatherForTemp, weatherForHum);
+
+                cardWeather.append(cardBodyWeather);
+                $("#weather-forecast").append(cardWeather);
+
+
 
             }
 
