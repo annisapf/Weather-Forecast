@@ -10,11 +10,11 @@ function showSavedData() {
 
 
     if (storeSaveCity !== null) {
-        cityArr = storeSaveCity;
+        getWeatherTodayButton();
     }
 
-}
 
+}
 
 //Function .on("click") to trigger AJAX call
 $('#find-city').on("click", function (event) {
@@ -84,7 +84,9 @@ function getWeatherToday(cityInput, callType) {
             var humidity = $('<p>').text("Humidity: " + response.main.humidity + "%");
 
 
+
             //var weatherIcon = $("<p>").append(iconURL);
+
 
 
             weatherDiv.append(city, temp, wind, humidity);
@@ -97,6 +99,7 @@ function getWeatherToday(cityInput, callType) {
             cityLon = response.coord.lon;
 
             getUVInd(APIKey, cityLat, cityLon);
+
 
             //if button city name already exist
             if (callType == "existing")
@@ -233,3 +236,4 @@ function saveCity() {
 }
 
 
+showSavedData();

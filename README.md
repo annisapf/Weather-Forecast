@@ -39,4 +39,4 @@ script.js  |
 
 
 ### Link to the App
-<a href="https://annisapf.github.io/">The URLs of the deployed applications in GitHub</a><hr>
+<a href="https://annisapf.github.io/Weather-Forecast/">The URLs of the deployed applications in GitHub</a><hr>
