@@ -18,6 +18,7 @@ function showSavedData() {
 
 //Function .on("click") to trigger AJAX call
 $('#find-city').on("click", function (event) {
+    event.preventDefault();
     getWeatherTodayButton();
     getWeatherForecast(APIKey);
     saveCity();
@@ -113,6 +114,7 @@ function getWeatherToday(cityInput, callType) {
                 $("#buttons-view").append(a);
 
                 $("#" + response.name).on("click", function (event) {
+                    event.preventDefault();
 
                     var cityName = this.id;
 
