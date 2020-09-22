@@ -4,7 +4,6 @@ var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
 var cityArr = [];
 
 
-showSavedData();
 
 function showSavedData() {
     var storeSaveCity = JSON.parse(localStorage.getItem(cityArr));
@@ -16,19 +15,25 @@ function showSavedData() {
 
 }
 
+
 //Function .on("click") to trigger AJAX call
 $('#find-city').on("click", function (event) {
-    getWeatherToday();
+    getWeatherTodayButton();
     getWeatherForecast(APIKey);
     saveCity();
-
 
 });
 
 
-function getWeatherToday() {
+function getWeatherTodayButton() {
 
     var cityInput = $("#city-input").val();
+
+    getWeatherToday(cityInput, "new");
+}
+
+function getWeatherToday(cityInput, callType) {
+
 
     //clear for new search result
     $("#weather-result").html("");
@@ -56,10 +61,15 @@ function getWeatherToday() {
             //Create div for weather
             var weatherDiv = $('<div class="weatherdiv">');
 
-            var iconWeather = '<i class="fas fa-sun"></i>';
 
-            var city = $("<p>").html("<h3>" + response.name + " (" + currentDate + ")" + iconWeather);
+            var getIcon = response.weather[0].icon;
+            console.log("cek icon", getIcon);
 
+            var iconURL = $('<img>').attr({ "src": "https://openweathermap.org/img/w/" + getIcon + ".png" });
+
+
+            var city = $("<p>").html("<h3>" + response.name + " (" + currentDate + ")");
+            city.append(iconURL);
 
             var tempF = (response.main.temp - 273.15) * 1.80 + 32;
 
@@ -73,6 +83,9 @@ function getWeatherToday() {
             var humidity = $('<p>').text("Humidity: " + response.main.humidity + "%");
 
 
+            //var weatherIcon = $("<p>").append(iconURL);
+
+
             weatherDiv.append(city, temp, wind, humidity);
 
 
@@ -84,21 +97,28 @@ function getWeatherToday() {
 
             getUVInd(APIKey, cityLat, cityLon);
 
-
-
+            //if button city name already exist
+            if (callType == "existing")
+                return;
 
             for (var i = 0; i < city.length; i++) {
 
 
-
-                // Then dynamicaly generating buttons for each movie in the array
-                // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-                var a = $("<button>").attr({ "class": "list-group-item list-group-item-action" });
+                // Then dynamicaly generating buttons for each city in the array
+                var a = $("<button>").attr({ "class": "list-group-item list-group-item-action", "id": response.name });
 
                 // Providing the initial button text
                 a.text(response.name);
                 // Adding the button to the buttons-view div
                 $("#buttons-view").append(a);
+
+                $("#" + response.name).on("click", function (event) {
+
+                    var cityName = this.id;
+
+                    getWeatherToday(cityName, "existing");
+
+                });
             }
         })
 }
@@ -191,8 +211,6 @@ function getWeatherForecast(APIKey) {
                 var weatherForTemp = $('<p>').html("Temperature: " + getForTemp + "&deg" + "F");
                 var weatherForHum = $('<p>').html("Humidity: " + getForHum + "% <br>");
 
-
-                //$("#weather-forecast").append(weatherForDate, weatherForTemp, weatherForHum);
 
                 cardBodyWeather.append(weatherForDate, weatherIcon, weatherForTemp, weatherForHum);
 
