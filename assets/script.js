@@ -4,6 +4,7 @@ var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
 var cityArr = [];
 
 
+
 //function to show saved city button after refresh
 function showSavedData() {
     var cityArr = JSON.parse(localStorage.getItem('citylist'));
@@ -59,7 +60,7 @@ function getWeatherToday(cityInput, callType) {
     //clear for new search result
     $("#weather-result").html("");
 
-    //cityArr.push(cityInput);
+    cityArr.push(cityInput);
 
     // Query the database
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
