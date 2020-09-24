@@ -4,15 +4,35 @@ var APIKey = "3d44e735d54eb161a90e34a5ec76979e";
 var cityArr = [];
 
 
-
+//function to show saved city button after refresh
 function showSavedData() {
-    var storeSaveCity = JSON.parse(localStorage.getItem(cityArr));
+    var cityArr = JSON.parse(localStorage.getItem('citylist'));
 
 
-    if (storeSaveCity !== null) {
-        getWeatherTodayButton();
+    for (var i = 0; i < cityArr.length; i++) {
+        console.log("cityArr", cityArr);
+
+
+
+        // Then dynamicaly generating buttons for each city in the array
+        var a = $("<button>").attr({ "class": "list-group-item list-group-item-action", "id": cityArr[i] });
+
+        // Providing the initial button text
+        a.text(cityArr[i]);
+        // Adding the button to the buttons-view div
+        $("#buttons-view").append(a);
+
+        $("#" + cityArr[i]).on("click", function (event) {
+            event.preventDefault();
+
+            var cityName = this.id;
+
+            getWeatherToday(cityName, "existing");
+            getWeatherForecast(cityName, APIKey);
+
+
+        });
     }
-
 
 }
 
@@ -20,9 +40,8 @@ function showSavedData() {
 $('#find-city').on("click", function (event) {
     event.preventDefault();
     getWeatherTodayButton();
-    getWeatherForecast(APIKey);
+    getWeatherForecastButton(APIKey);
     saveCity();
-
 });
 
 
@@ -31,6 +50,7 @@ function getWeatherTodayButton() {
     var cityInput = $("#city-input").val();
 
     getWeatherToday(cityInput, "new");
+
 }
 
 function getWeatherToday(cityInput, callType) {
@@ -39,7 +59,7 @@ function getWeatherToday(cityInput, callType) {
     //clear for new search result
     $("#weather-result").html("");
 
-    cityArr.push(cityInput);
+    //cityArr.push(cityInput);
 
     // Query the database
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
@@ -85,9 +105,6 @@ function getWeatherToday(cityInput, callType) {
 
 
 
-            //var weatherIcon = $("<p>").append(iconURL);
-
-
 
             weatherDiv.append(city, temp, wind, humidity);
 
@@ -121,7 +138,10 @@ function getWeatherToday(cityInput, callType) {
 
                     var cityName = this.id;
 
+                    saveCity();
+
                     getWeatherToday(cityName, "existing");
+
 
                 });
             }
@@ -129,7 +149,7 @@ function getWeatherToday(cityInput, callType) {
 }
 
 
-
+//Function to get UV Index
 function getUVInd(APIKey, cityLat, cityLon) {
 
     var queryURLUV = "https://api.openweathermap.org/data/2.5/uvi?lat=" + cityLat + "&lon=" + cityLon + "&appid=" + APIKey;
@@ -157,9 +177,13 @@ function getUVInd(APIKey, cityLat, cityLon) {
         })
 }
 
-function getWeatherForecast(APIKey) {
-
+function getWeatherForecastButton(APIKey) {
     var cityInput = $("#city-input").val();
+    getWeatherForecast(cityInput, APIKey)
+}
+
+
+function getWeatherForecast(cityInput, APIKey) {
 
     //clear for new search result
     $("#weather-forecast").html("");
@@ -184,10 +208,8 @@ function getWeatherForecast(APIKey) {
             for (var i = 1; i <= getForInfo.length / 8; i++) {
 
                 var getIcon = getForInfo[i * 7].weather[0].icon;
-                console.log(getIcon);
 
-
-                //get epoch time
+                //get epoch time and convert to date
                 var getForDate = getForInfo[i * 7].dt * 1000;
                 var getWeatherDate = new Date(getForDate).getDate();
                 var getWeatherMonth = new Date(getForDate).getMonth();
@@ -196,11 +218,6 @@ function getWeatherForecast(APIKey) {
                 var getForTemp = getForInfo[i * 7].main.temp;
                 var getForHum = getForInfo[i * 7].main.humidity;
 
-                console.log("epoch: " + getForDate);
-                console.log("Date: " + getWeatherDate);
-                console.log("Humidity: " + getForHum);
-                console.log("Temperature: " + getForTemp);
-                console.log("Humidity: " + getForHum);
 
                 //create card body
                 var cardWeather = $('<div>').attr({ "class": "card bg-info shadow m-4 flex-container" });
@@ -229,6 +246,7 @@ function getWeatherForecast(APIKey) {
         })
 
 }
+
 
 
 function saveCity() {
