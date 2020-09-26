@@ -36,7 +36,7 @@ script.js  |
 * [Postman] (https://www.postman.com/) - The Postman API allows to easy access to API.
 
 ## Screenshot
-
+![Weather-Forecast](https://user-images.githubusercontent.com/7066137/94339127-df562500-003a-11eb-9c08-114cac8f9548.png)
 
 ### Link to the App
 <a href="https://annisapf.github.io/Weather-Forecast/">The URLs of the deployed applications in GitHub</a><hr>
